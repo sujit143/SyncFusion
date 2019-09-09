@@ -1,0 +1,565 @@
+
+<mat-toolbar color="primary">
+        <mat-toolbar-row>
+           <!-- <h1>YOURDRS</h1> -->
+           <img src="assets/images/download.png"  height=70 width=100px>
+           <mat-menu #appMenu="matMenu">
+              <button mat-menu-item (click)='onClickAD()'>Schedule an appointment</button>
+              <button mat-menu-item (click)='onClickOD()'>Office Dashboard</button>
+            </mat-menu>
+
+            <button mat-icon-button [matMenuTriggerFor]="appMenu">
+       <mat-icon>more_vert</mat-icon>
+            </button>
+
+
+                    <!-- <img src="assets/images/form.png" class="img2"> -->
+                    <!-- <button class="btn btn-small" class="btn btn-dark" (click)="onClickForm()">Form</button> -->
+
+
+
+            <!-- <img src="assets/arrow1.svg" class="imgbtn1"> -->
+            <!-- hello -->
+       <button
+            type="button"
+            aria-label="Toggle sidenav"
+            mat-icon-button
+            (click)="drawer.toggle()"
+            *ngIf="isHandset$ | async">
+            <mat-icon>menu</mat-icon>
+
+          </button>
+            </mat-toolbar-row>
+
+
+        </mat-toolbar>
+
+
+        <mat-tab-group>
+                <mat-tab label="Appointments Dashboard" *ngIf="adjusterDashboard">
+                    <!-- 1st registration form -->
+<div>
+        <mat-tab-group animationDuration="0ms">
+          <mat-tab label="Demographics">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-sm-10">
+
+                  <div class="card text-white bg-secondary mb-3">
+                    <div class="card-header">Enter Patient Informartion</div>
+                    <div class="card-body">
+                      <form [formGroup]="details">
+                          <div class="form-group row">
+
+                            <div class="form-group col-md-2">
+                              <label> Patient Name<span style="color: red">*</span></label>
+                              <input  formControlName="patientname"  type="text" class="form-control" placeholder="Patient name"  >
+                              <label class="alert alert-danger" *ngIf="details.get('patientname').hasError('required') && !details.get('patientname').pristine" >This field is required.</label>
+                            </div>
+
+                            <div class="form-group col-md-2">
+                              <label>Patient DOB</label>
+                              <div>
+                                <input type="date" name="bday">
+                              </div>
+                            </div>
+
+                            <div class="form-group col-md-2">
+                              <label>Phone</label>
+                              <!-- <input formControlName="phone" type="text" class="form-control"> -->
+                              <input id="tel" class="form-control" phoneMask [preValue]="details.value.phone"  [phoneControl]="details.controls['phone']" formControlName="phone" maxlength="14"
+                              [ngClass]="(details.controls['phone'].invalid)? 'errmsg' : 'validmsg'" placeholder="(xxx)xxx-xxxx">
+                            </div>
+
+                            <div class="form-group col-md-2">
+                              <label>Email</label>
+                              <input formControlName="email" type="text" class="form-control" placeholder="Email">
+                              <label class="alert alert-danger"  *ngIf="details.get('email').hasError('email')">Email is invalid.</label>
+                            </div>
+
+                            <div class="form-group col-md-2">
+                              <!-- <a class="btn btn-primary btnprocessing" style="margin-top: 25px;" *ngIf="!isActive" (click)=openEdit(content,i)>Continue</a> -->
+                              <button type="submit" class="btn btn-primary btn-continue" style="margin-top: 30px;" *ngIf="!checked" (click)=openform(reg,content1)>continue</button>
+                            </div>
+
+                          </div>
+                        </form>
+                        <div>Caller Details</div>
+                        <hr color="white">
+                        <div class="card-body">
+                          <form [formGroup]="callerdetails">
+                            <div class="form-group row">
+
+                              <div class="form-group col-md-2">
+                                <label>Name</label>
+                                <input  formControlName="callername" type="text" class="form-control" placeholder="Caller Name">
+                                <label class="alert alert-danger" *ngIf="callerdetails.get('callername').hasError('required') && !callerdetails.get('callername').pristine" >This field is required.</label>
+                              </div>
+
+                              <div class="form-group col-md-2">
+                                <label>Phone</label>
+                                <input id="tel" class="form-control" phoneMask [preValue]="callerdetails.value.phoneno"  [phoneControl]="callerdetails.controls['phoneno']" formControlName="phoneno" maxlength="14"
+                                [ngClass]="(callerdetails.controls['phoneno'].invalid)? 'errmsg' : 'validmsg'" placeholder="(xxx)xxx-xxxx">
+                                <label class="alert alert-danger" *ngIf="callerdetails.get('phoneno').hasError('required') && !callerdetails.get('phoneno').pristine" >This field is required.</label>
+                              </div>
+
+                              <div class="form-group col-md-3">
+                                <label >Relationship to Patient</label>
+                                <div>
+                                  <input type="text" [formControl]="control" [matAutocomplete]="auto">
+                                  <mat-autocomplete #auto="matAutocomplete">
+                                    <mat-option *ngFor="let relation of filteredRelation | async" [value]="relation">{{relation}}</mat-option>
+                                  </mat-autocomplete>
+                                </div>
+                              </div>
+
+                              <div class="form-group col-md-3">
+                                <div class="check1">
+                                  <!-- <input type="checkbox" style="margin-top: 25px;" (click)="onCheck()" formControlName="checkBoxCall" >Call patient to book Appointments -->
+                                  <input type="checkbox" style="margin-top: 40px;" data-md-icheck (change)="addprop1($event)">Call patient to book Appointments?
+                                </div>
+                              </div>
+
+                              <div class="finish1">
+                                <button type="submit" style="margin-top: 30px;" class="btn btn-warning btn-finishs" *ngIf="checked">Finish</button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab label="Insurance">
+            <h1>Insurance</h1>
+          </mat-tab>
+          <mat-tab label="Appointments">
+            <h1>Appointments </h1>
+          </mat-tab>
+          <mat-tab label="Referral Source">
+            <h1>Referral Source </h1>
+          </mat-tab>
+          <mat-tab label="Documents">
+            <h1>Documents </h1>
+          </mat-tab>
+          <mat-tab label="Care Team">
+            <h1>Care Team </h1>
+          </mat-tab>
+          <mat-tab label="Appointment Memo">
+            <h1>Appointment Memo </h1>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+          <!-- End of 1st registration form -->
+
+          <!-- 2nd registration form -->
+          <ng-template #reg let-modal>
+                <div class="modal-header">
+                        <h5 class="modal-title" id="modal-basic-title">Patient Information</h5>
+                        <button type="button" class="btn btn-small btn-danger pull-right closewizard" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                          <span aria-hidden="true">Close</span>
+                        </button>
+                      </div>
+
+                      <div class="modal-body">
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div
+                            style="padding: 20px; border: 1px solid lightgray; border-radius: 10px; background-color: #454e5c; color: white; margin-top: 20px;">
+                            <form [formGroup]="general" (ngSubmit)="onUserSave()">
+                            <table>
+                              <tbody>
+                                <tr>
+                                  <td colspan="3">
+                                    <b>General Information</b>
+                                    <hr style="margin: 10px 0px;">
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="width: 33%;">
+                                    <label>First Name <span style="color: red">*</span></label><br>
+                                    <input formControlName="firstname" class="form-control form-control-new" type="text" style="background-color:#454e5c; color: white">
+                                    <label class="alert alert-danger" *ngIf="general.get('firstname').hasError('required') && !general.get('firstname').pristine" >This field is required.</label>
+                                  </td>
+                                  <td style="margin-left: 10px; width: 33%;">
+                                    <label>Middle Name </label>
+                                    <br>
+                                    <input class="form-control form-control-new" type="text" style="background-color:#454e5c; color: white">
+                                  </td>
+                                  <td style="margin-left: 10px; width: 33%;">
+                                    <label>Last Name <span style="color: red">*</span></label><br>
+                                    <input formControlName="lastname" class="form-control form-control-new" type="text" style="background-color:#454e5c; color: white">
+                                    <label class="alert alert-danger" *ngIf="general.get('lastname').hasError('required') && !general.get('lastname').pristine" >This field is required.</label>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="margin-left: 10px; width: 33%; padding-top: 18px;">
+                                    <label>DOB </label><br>
+                                    <input formControlName="dob" class="form-control form-control-new" data-mask="99/99/9999" placeholder="mm/dd/yyyy" type="text"
+                                      style="background-color:#454e5c; color: white">
+                                  </td>
+                                  <td style="width: 33%; padding-top: 18px;">
+                                    <label>Gender</label><br>
+                                    <input formControlName="gender" class="form-control form-control-new" type="text" list="genders">
+                                    <label class="alert alert-danger" *ngIf="general.get('gender').hasError('required') && !general.get('gender').pristine" >This field is required.</label>
+                                    <datalist id="genders">
+                                      <option value="Select">
+                                      <option value="Female">
+                                      <option value="Male">
+                                      <option value="Other">
+                                    </datalist>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </form>
+                          </div>
+
+                          <div
+                            style="padding: 20px; border: 1px solid lightgray; border-radius: 10px; background-color: #454e5c; color: white; margin-top: 20px;">
+                            <form [formGroup]="contact" (ngSubmit)="onUserSave()">
+                            <table style="width: 100%">
+                              <tbody>
+                                <tr>
+                                  <td colspan="3">
+                                    <b>Contact Information</b>
+                                    <hr style="margin: 10px 0px;">
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="width: 33%;">
+
+                                    <label>Home # <span style="color: red">*</span></label>&nbsp;&nbsp;
+
+                                    <input formControlName="home" class="form-control form-control-new" data-mask="(999)999-9999" placeholder="(xxx)xxx-xxxx"
+                                      type="text" style="background-color:#454e5c; color: white" phoneMask [preValue]="contact.value.home"  [phoneControl]="contact.controls['home']" maxlength="14"
+                                      [ngClass]="(contact.controls['home'].invalid)? 'errmsg' : 'validmsg'" placeholder="(xxx)xxx-xxxx">
+
+                                  </td>
+                                  <td style="width: 33%; margin-left: 10px;">
+
+                                    <label>Cell #</label>&nbsp;&nbsp;
+                                    <input formControlName="cell" class="form-control form-control-new" data-mask="(999)999-9999" placeholder="(xxx)xxx-xxxx"
+                                      type="text" style="background-color:#454e5c; color: white" phoneMask [preValue]="contact.value.cell"  [phoneControl]="contact.controls['cell']" maxlength="14"
+                                      [ngClass]="(contact.controls['cell'].invalid)? 'errmsg' : 'validmsg'" placeholder="(xxx)xxx-xxxx">
+
+                                  </td>
+                                  <td style="width: 33%; margin-left: 10px;">
+
+                                    <label>Work Phone #</label>&nbsp;&nbsp;
+                                    <input formControlName="workphone" class="form-control form-control-new" data-mask="(999)999-9999" placeholder="(xxx)xxx-xxxx"
+                                      type="text" style="background-color:#454e5c; color: white" phoneMask [preValue]="contact.value.workphone"  [phoneControl]="contact.controls['workphone']"  maxlength="14"
+                                      [ngClass]="(contact.controls['workphone'].invalid)? 'errmsg' : 'validmsg'" placeholder="(xxx)xxx-xxxx">
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="padding-top: 18px;">
+                                    <label>Email </label>
+                                    <br>
+                                    <input formControlName="email" class="form-control form-control-new" type="text" style="background-color:#454e5c; color: white">
+                                    <label class="alert alert-danger"  *ngIf="contact.get('email').hasError('email')">Email is invalid.</label>
+                                  </td>
+                                  <td style="width: 40%; margin-left: 10px; padding-top: 18px;">
+                                    <label>Preferred Mode of Contact </label>
+                                    <input formControlName="mode" class="form-control form-control-new" type="text" list="modes">
+                                    <datalist id="modes">
+                                      <option value="Select">
+                                      <option value="Email">
+                                      <option value="Phone">
+                                      <option value="Text">
+                                    </datalist>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </form>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div
+                            style="padding: 20px; border: 1px solid lightgray; border-radius: 10px; background-color: #454e5c; color: white; margin-top: 20px;">
+                            <form [formGroup]="address" (ngSubmit)="onUserSave()">
+                            <table style="width: 100%">
+                              <tbody>
+                                <tr>
+                                  <td colspan="3">
+                                    <b>Address Information</b>
+                                    <hr style="margin: 10px 0px;">
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="width: 33%;">
+                                    <label>Address 1 </label>
+                                    <input formControlName="address1" class="form-control form-control-new" type="text" style="background-color:#454e5c; color: white">
+                                  </td>
+                                  <td style="margin-left: 10px; width: 33%;">
+                                    <label>Address 2 </label>
+                                    <input formControlName="address2" class="form-control form-control-new" type="text" style="background-color:#454e5c; color: white">
+                                  </td>
+                                  <td style="margin-left: 10px; width: 33%;">
+                                    <label>ZIP </label>
+                                    <input formControlName="zip" class="form-control form-control-new" placeholder="xxxxx-xxxx" type="text"
+                                      style="background-color:#454e5c; color: white">
+
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <td style="width: 33%; padding-top: 18px;">
+                                    <label>City </label>
+                                    <input formControlName="city" class="form-control form-control-new" type="text" style="background-color:#454e5c; color: white">
+                                  </td>
+                                  <td style="margin-left: 10px; width: 33%; padding-top: 18px;">
+                                    <label>State </label>
+                                    <input formControlName="state" class="form-control form-control-new" type="text" list="states">
+                                      <datalist id="states">
+                                        <option value="Select">
+                                        <option value="AE">
+                                        <option value="AL">
+                                        <option value="AK">
+                                        <option value="AS">
+                                        <option value="CO">
+                                        <option value="CL">
+                                        <option value="IN">
+                                        <option value="ID">
+                                        <option value="ZN">
+                                      </datalist>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </form>
+                          </div>
+
+                          <div
+                            style="padding: 20px; border: 1px solid lightgray; border-radius: 10px; background-color: #454e5c; color: white; margin-top: 20px;">
+                            <form [formGroup]="other" (ngSubmit)="onUserSave()">
+                            <table style="width: 100%">
+                              <tbody>
+                                <tr>
+                                  <td colspan="3">
+                                    <b>Other Information</b>
+                                    <hr style="margin: 10px 0px;">
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="width: 33%;">
+
+                                    <label>SSN </label>
+
+                                    <input formControlName="ssn" class="form-control form-control-new" placeholder="xxx-xx-xxxx" type="text"
+                                      style="background-color:#454e5c; color: white">
+
+                                  </td>
+                                  <td style="margin-left: 10px; width: 33%;">
+
+                                    <label>Preferred Language </label>
+                                    <input formControlName="language" class="form-control form-control-new" type="text" list="languages">
+                                      <datalist id="languages">
+                                        <option value="Select">
+                                        <option value="Arabic">
+                                        <option value="English">
+                                        <option value="French">
+                                        <option value="Greek">
+                                        <option value="Japanese">
+                                        <option value="Tamil">
+                                      </datalist>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="3" style="padding-top: 18px;">
+                                    <b>Authorization to Contact Patient</b>
+                                    <hr style="margin: 10px 0px;">
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="3" style="width: 33%;">
+                                          <mat-checkbox>Email</mat-checkbox>&nbsp;&nbsp;
+                                          <mat-checkbox>Phone</mat-checkbox>&nbsp;&nbsp;
+                                          <mat-checkbox>Text</mat-checkbox>&nbsp;&nbsp;
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </form>
+                          </div>
+                        </div>
+                      </div>
+
+
+                  </div>
+                  </ng-template>
+                  <!-- End of sencond registration form -->
+
+
+                  <!-- display table of existing names -->
+                  <ng-template #content1 let-modal>
+                      <!-- <div class="model-content" style="width:max-content"> -->
+                      <!-- <div class="modal-dialog modal-xl" class="modal-content"> -->
+                        <!-- <div class="modal-content"> -->
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="modal-basic-title">Existing episodes</h5>
+                          <button type="button" class="close bg bg-danger" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                            <span aria-hidden="true">Close</span>
+                          </button>
+                        </div>
+
+                        <div class="modal-body">
+                          <div>
+                            <table class="table">
+                                <thead>
+                                  <tr>
+                                  <!-- <th>Sl.No</th> -->
+                                  <th>FirstName</th>
+                                  <th>LastName</th>
+                                  <th>Phone</th>
+                                  <th>Email</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let item of arr; let i=index">
+                                    <td >{{item.patname }}</td>
+                                    <td  >{{item.lastname}}</td>
+                                    <td  >{{item.phone}}</td>
+                                    <td  >{{item.email}}</td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              </div>
+                        </div>
+                      <!-- </div> -->
+                    </ng-template>
+
+                     <!-- end of display table of existing names -->
+
+                </mat-tab>
+                  <mat-tab label="Appointments Scheduler" *ngIf="officeDashboard">
+                        <form>
+                            <!-- <div class="example-large-box mat-elevation-z4"> -->
+
+                            <mat-accordion style=" margin-top: -105px; width:2000px">
+                                <mat-expansion-panel>
+                                  <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                      <h3>Search Filter</h3>
+                                    </mat-panel-title>
+
+                                  </mat-expansion-panel-header>
+                          <div class="form-group row">
+
+                              <div class="form-group col-md-3">
+                                  <label><b>Practice</b></label><br>
+
+                                    <ejs-multiselect id='localData' #local [dataSource]='arrspe' [fields]='localFields' [placeholder]='localWaterMark'></ejs-multiselect>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                              <label ><b>Location </b></label><br>
+
+                                    <ejs-autocomplete id='atcelement' [dataSource]='searchData1' [fields]='fields1' [placeholder]='text1' [autofill]='autofill1'></ejs-autocomplete>
+                              </div>
+
+                              <div class="form-group col-md-3">
+                                <label > Provider/Physician Assistant</label>
+
+                                 <ejs-autocomplete id='atcelement' [dataSource]='searchData2' [fields]='fields2' [placeholder]='text2' [autofill]='autofill2'></ejs-autocomplete>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                  <label >Specialty</label><br>
+
+                                  <ejs-multiselect id='localData' #local [dataSource]='arr1' [fields]='localFields' [placeholder]='localWaterMark'></ejs-multiselect>
+
+                                </div>
+                          </div>
+
+                            <div class="form-row">
+                              <div class="form-group col-md-2">
+                                <label >Search From Date</label><br>
+                                  <input type="date" name="bday">
+                              </div>
+
+                                <div style="margin-top: 30px;" >
+                                    <mat-checkbox>Clinical</mat-checkbox>&nbsp;&nbsp;
+                                    <mat-checkbox>PT</mat-checkbox>&nbsp;&nbsp;
+                                    <mat-checkbox>Dx</mat-checkbox>&nbsp;&nbsp;
+                                    <mat-checkbox>Concierge</mat-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  </div>
+
+                              <div class="form-group col-md-2">
+                                <label>Scheduler Start Time</label>
+                                <select  class="form-control" style="color: black">
+                                    <option value="10am">10am</option>
+                                    <option value="11am">11am</option>
+                                    <option value="12am">12am</option>
+                                    <option value="1pm">1pm</option>
+
+                                </select>
+                              </div>
+                              <div class="form-group col-md-2">
+                                <label>Scheduler End Time</label>
+                                <select  class="form-control" style="color: black">
+                                    <option value="7am">7am</option>
+                                    <option value="8am">8am</option>
+                                    <option value="9am">9am</option>
+                                    <option value="10pm">10am</option>
+
+                                </select>
+                              </div>
+
+                              <div class="form-group col-md-2">
+
+                              <button class="btn btn-primary" (click)=" openEdit(contents)">Search</button>
+                            </div>
+                            </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                          <!-- </div> -->
+                          </form>
+
+
+                </mat-tab>
+
+
+                <mat-tab label="My Cases" *ngIf="myCases">  </mat-tab>
+              </mat-tab-group>
+
+
+              <ng-template #contents>
+                    <div class="control-section">
+
+
+                     <ejs-schedule #scheduleObj cssClass='schedule-group-custom-work-days' width='100%' height='650px' [currentView]="currentView"
+                         [group]="group" [selectedDate]="selectedDate"
+
+                         (actionBegin)="onActionBegin($event)"
+                           [allowResizing]="allowResizing"
+                         [allowDragAndDrop]="allowDragDrop">
+                         <ng-template #resourceHeaderTemplate let-data>
+                             <div class='template-wrap'>
+                                 <div class="resource-image {{getDoctorImage(data)}}"></div>
+                                 <div class="resource-details">
+                                     <div class="resource-name">{{getDoctorName(data)}}</div>
+                                     <div class="resource-designation">{{getDoctorLevel(data)}}</div>
+
+                                 </div>
+
+
+                             </div>
+                         </ng-template>
+                         <e-views>
+                             <e-view option="WorkWeek"></e-view>
+                             <e-view option="Month"></e-view>
+                         </e-views>
+                         <e-resources>
+                             <e-resource Provider="xyz" field='DoctorId' title='Doctor Name' name='Doctors' [dataSource]='resourceDataSource' textField='text' idField='id'
+                                 colorField='color' workDaysField='workDays' startHourField='startHour' endHourField='endHour'>
+                             </e-resource>
+                         </e-resources>
+                     </ejs-schedule>
+                    </div>
+                  </ng-template>
+
